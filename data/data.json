@@ -46,6 +46,102 @@
       "operatorId": 3,
       "type": "publico",
       "zone": "Centro"
+    },
+    {
+      "id": 3,
+      "name": "Parqueo Barrio Escalante",
+      "latitude": 10.3350,
+      "longitude": -84.4150,
+      "capacity": 30,
+      "availableSpots": 12,
+      "ratePerHour": 700,
+      "operatorId": 2,
+      "type": "privado",
+      "zone": "Norte"
+    },
+    {
+      "id": 4,
+      "name": "Zona Verde Norte",
+      "latitude": 10.3400,
+      "longitude": -84.4100,
+      "capacity": 50,
+      "availableSpots": 28,
+      "ratePerHour": 600,
+      "operatorId": 3,
+      "type": "publico",
+      "zone": "Norte"
+    },
+    {
+      "id": 5,
+      "name": "Parqueo Sur Mall",
+      "latitude": 10.3100,
+      "longitude": -84.4400,
+      "capacity": 60,
+      "availableSpots": 35,
+      "ratePerHour": 900,
+      "operatorId": 2,
+      "type": "privado",
+      "zone": "Sur"
+    },
+    {
+      "id": 6,
+      "name": "Estacionamiento Público Sur",
+      "latitude": 10.3050,
+      "longitude": -84.4450,
+      "capacity": 40,
+      "availableSpots": 18,
+      "ratePerHour": 500,
+      "operatorId": 3,
+      "type": "publico",
+      "zone": "Sur"
+    },
+    {
+      "id": 7,
+      "name": "Parqueo Comercial Este",
+      "latitude": 10.3234,
+      "longitude": -84.4000,
+      "capacity": 45,
+      "availableSpots": 20,
+      "ratePerHour": 750,
+      "operatorId": 2,
+      "type": "privado",
+      "zone": "Este"
+    },
+    {
+      "id": 8,
+      "name": "Zona Azul Este",
+      "latitude": 10.3280,
+      "longitude": -84.3950,
+      "capacity": 35,
+      "availableSpots": 10,
+      "ratePerHour": 550,
+      "operatorId": 3,
+      "type": "publico",
+      "zone": "Este"
+    },
+    {
+      "id": 9,
+      "name": "Parqueo Oeste Premium",
+      "latitude": 10.3234,
+      "longitude": -84.4550,
+      "capacity": 55,
+      "availableSpots": 32,
+      "ratePerHour": 850,
+      "operatorId": 2,
+      "type": "privado",
+      "zone": "Oeste"
+    },
+    {
+      "id": 10,
+      "name": "Estacionamiento Oeste",
+      "latitude": 10.3200,
+      "longitude": -84.4600,
+      "capacity": 30,
+      "availableSpots": 8,
+      "ratePerHour": 480,
+      "operatorId": 3,
+      "type": "publico",
+      "zone": "Oeste"
     }
   ],
   "payments": [
