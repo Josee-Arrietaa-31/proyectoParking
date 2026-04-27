@@ -53,5 +53,6 @@ export const ZONES = [
   { id: "Norte", name: "⬆️ Norte", color: "blue" },
   { id: "Sur", name: "⬇️ Sur", color: "orange" },
   { id: "Este", name: "➡️ Este", color: "purple" },
-  { id: "Oeste", name: "⬅️ Oeste", color: "pink" }
+  { id: "Oeste", name: "⬅️ Oeste", color: "pink" },
+  { id: "Fortuna", name: "🌴 Fortuna", color: "amber" }
 ];

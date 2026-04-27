@@ -1,6 +1,5 @@
 import { useState } from "react";
 import ZoneSelector from "./ZoneSelector";
-import ParkingCard from "./ParkingCard";
 
 function ZoneView({ parkings, ratings, formatCurrency, onPayParking, onShowRatingModal }) {
   const [selectedZone, setSelectedZone] = useState(null);
@@ -15,6 +14,25 @@ function ZoneView({ parkings, ratings, formatCurrency, onPayParking, onShowRatin
   });
 
   const selectedParkings = selectedZone ? (zonesWithParkings[selectedZone] || []) : [];
+
+  const handleOpenMaps = (parking) => {
+    const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(parking.address)}/@${parking.latitude},${parking.longitude},17z`;
+    window.open(mapsUrl, "_blank");
+  };
+
+  const getAvailabilityColor = (parking) => {
+    const percentage = (parking.availableSpots / parking.capacity) * 100;
+    if (percentage > 50) return "bg-emerald-50 border-emerald-200";
+    if (percentage > 20) return "bg-amber-50 border-amber-200";
+    return "bg-rose-50 border-rose-200";
+  };
+
+  const getAvailabilityBadge = (parking) => {
+    const percentage = (parking.availableSpots / parking.capacity) * 100;
+    if (percentage > 50) return "text-emerald-700";
+    if (percentage > 20) return "text-amber-700";
+    return "text-rose-700";
+  };
 
   return (
     <div className="space-y-6">
@@ -39,34 +57,64 @@ function ZoneView({ parkings, ratings, formatCurrency, onPayParking, onShowRatin
           </h3>
 
           {selectedParkings.length > 0 ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {selectedParkings.map((parking) => (
-                <div key={parking.id} className="space-y-3">
-                  <ParkingCard
-                    parking={parking}
-                    formatCurrency={formatCurrency}
-                    ratings={ratings}
-                    action={
-                      <div className="flex flex-col gap-2">
+            <div className="space-y-3">
+              {selectedParkings.map((parking) => {
+                const parkingRatings = ratings.filter(r => r.parkingId === parking.id);
+                const avgRating = parkingRatings.length > 0 
+                  ? (parkingRatings.reduce((sum, r) => sum + r.rating, 0) / parkingRatings.length).toFixed(1)
+                  : "—";
+
+                return (
+                  <div key={parking.id} className={`p-4 rounded-xl border ${getAvailabilityColor(parking)} transition hover:shadow-md`}>
+                    <div className="flex justify-between items-start gap-4">
+                      {/* Información del parqueo */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h4 className="font-semibold text-slate-900 truncate">{parking.name}</h4>
+                          <span className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
+                            parking.type === "privado" 
+                              ? "bg-blue-100 text-blue-700" 
+                              : "bg-emerald-100 text-emerald-700"
+                          }`}>
+                            {parking.type === "privado" ? "🔒 Privado" : "🔓 Público"}
+                          </span>
+                        </div>
+
+                        <p className="text-sm text-slate-600 mb-3 truncate">📍 {parking.address}</p>
+
+                        <div className="flex flex-wrap gap-3 items-center text-sm">
+                          <div>
+                            <span className="font-semibold text-slate-900">₡{parking.ratePerHour}/hr</span>
+                          </div>
+                          <div className={`font-semibold ${getAvailabilityBadge(parking)}`}>
+                            {parking.availableSpots > 0 ? `${parking.availableSpots}/${parking.capacity} disponibles` : "Lleno"}
+                          </div>
+                          <div className="text-slate-600">
+                            ⭐ {avgRating} ({parkingRatings.length})
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Botones de acción */}
+                      <div className="flex flex-col gap-2 whitespace-nowrap">
                         <button
-                          className="inline-flex rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700 w-full justify-center"
-                          type="button"
-                          onClick={() => onPayParking(parking.id)}
+                          onClick={() => handleOpenMaps(parking)}
+                          className="px-3 py-2 rounded-lg bg-blue-500 text-white text-sm font-semibold hover:bg-blue-600 transition"
+                          title="Abrir ubicación en Google Maps"
                         >
-                          Pagar 1 hora
+                          🗺️ Ir
                         </button>
                         <button
-                          className="inline-flex rounded-2xl bg-blue-100 px-4 py-3 text-sm font-semibold text-blue-700 transition hover:bg-blue-200 w-full justify-center"
-                          type="button"
                           onClick={() => onShowRatingModal(parking)}
+                          className="px-3 py-2 rounded-lg bg-blue-100 text-blue-700 text-sm font-semibold hover:bg-blue-200 transition"
                         >
-                          ⭐ Ver calificaciones
+                          ⭐ Ver
                         </button>
                       </div>
-                    }
-                  />
-                </div>
-              ))}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           ) : (
             <div className="text-center py-12">

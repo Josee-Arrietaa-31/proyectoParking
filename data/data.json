@@ -26,6 +26,7 @@
     {
       "id": 1,
       "name": "Parqueo Central San Carlos",
+      "address": "Avenida Central, San José, Centro",
       "latitude": 10.3234,
       "longitude": -84.4271,
       "capacity": 40,
@@ -38,6 +39,7 @@
     {
       "id": 2,
       "name": "Zona Azul Municipal",
+      "address": "Calle 4, entre Avenida 1 y 3, Centro",
       "latitude": 10.322,
       "longitude": -84.4292,
       "capacity": 25,
@@ -50,6 +52,7 @@
     {
       "id": 3,
       "name": "Parqueo Barrio Escalante",
+      "address": "Calle 33, Barrio Escalante",
       "latitude": 10.3350,
       "longitude": -84.4150,
       "capacity": 30,
@@ -62,6 +65,7 @@
     {
       "id": 4,
       "name": "Zona Verde Norte",
+      "address": "Avenida 7, Los Yoses",
       "latitude": 10.3400,
       "longitude": -84.4100,
       "capacity": 50,
@@ -74,6 +78,7 @@
     {
       "id": 5,
       "name": "Parqueo Sur Mall",
+      "address": "Paseo Colón, Sabana Sur",
       "latitude": 10.3100,
       "longitude": -84.4400,
       "capacity": 60,
@@ -86,6 +91,7 @@
     {
       "id": 6,
       "name": "Estacionamiento Público Sur",
+      "address": "Calle Blancos, San Pedro Sur",
       "latitude": 10.3050,
       "longitude": -84.4450,
       "capacity": 40,
@@ -98,6 +104,7 @@
     {
       "id": 7,
       "name": "Parqueo Comercial Este",
+      "address": "Avenida Comercial, Barrio González Lahmann",
       "latitude": 10.3234,
       "longitude": -84.4000,
       "capacity": 45,
@@ -110,6 +117,7 @@
     {
       "id": 8,
       "name": "Zona Azul Este",
+      "address": "San Pedro de Montes de Oca",
       "latitude": 10.3280,
       "longitude": -84.3950,
       "capacity": 35,
@@ -122,6 +130,7 @@
     {
       "id": 9,
       "name": "Parqueo Oeste Premium",
+      "address": "Calle 54, Paseo Colón Oeste",
       "latitude": 10.3234,
       "longitude": -84.4550,
       "capacity": 55,
@@ -134,6 +143,7 @@
     {
       "id": 10,
       "name": "Estacionamiento Oeste",
+      "address": "Avenida Segunda Oeste, La Uruca",
       "latitude": 10.3200,
       "longitude": -84.4600,
       "capacity": 30,
@@ -142,6 +152,45 @@
       "operatorId": 3,
       "type": "publico",
       "zone": "Oeste"
+    },
+    {
+      "id": 11,
+      "name": "Parqueo Fortuna Centro",
+      "address": "Calle Principal, Fortuna",
+      "latitude": 10.3100,
+      "longitude": -84.5200,
+      "capacity": 50,
+      "availableSpots": 0,
+      "ratePerHour": 750,
+      "operatorId": 2,
+      "type": "privado",
+      "zone": "Fortuna"
+    },
+    {
+      "id": 12,
+      "name": "Fortuna Public Parking",
+      "address": "Avenida Fortuna, Centro Comercial",
+      "latitude": 10.3150,
+      "longitude": -84.5150,
+      "capacity": 40,
+      "availableSpots": 0,
+      "ratePerHour": 500,
+      "operatorId": 3,
+      "type": "publico",
+      "zone": "Fortuna"
+    },
+    {
+      "id": 13,
+      "name": "Garage Fortuna Premium",
+      "address": "Calle 2, Fortuna",
+      "latitude": 10.3080,
+      "longitude": -84.5250,
+      "capacity": 35,
+      "availableSpots": 0,
+      "ratePerHour": 900,
+      "operatorId": 2,
+      "type": "privado",
+      "zone": "Fortuna"
     }
   ],
   "payments": [
