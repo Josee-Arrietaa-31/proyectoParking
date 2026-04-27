@@ -177,7 +177,13 @@ function App() {
                   title="Panel del conductor"
                   description="Consulta parqueos cercanos, revisa disponibilidad y registra pagos desde una vista dedicada."
                 >
-                  <ConductorView parkings={parkings} formatCurrency={formatCurrency} onPayParking={payParking} />
+                  <ConductorView 
+                    parkings={parkings} 
+                    payments={payments}
+                    currentUser={currentUser}
+                    formatCurrency={formatCurrency} 
+                    onPayParking={payParking} 
+                  />
                 </DashboardShell>
               </ProtectedRoute>
             }
