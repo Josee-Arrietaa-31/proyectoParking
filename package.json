@@ -1,0 +1,18 @@
+{
+  "name": "plataforma-parqueos",
+  "version": "1.0.0",
+  "description": "Prototipo de plataforma integrada de gestion de parqueos",
+  "main": "server.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.2.4",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "tailwindcss": "^4.2.4",
+    "vite": "^8.0.10"
+  }
+}

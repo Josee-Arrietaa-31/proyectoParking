@@ -1,0 +1,59 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Ana Conductor",
+      "email": "conductor@demo.com",
+      "password": "1234",
+      "role": "conductor"
+    },
+    {
+      "id": 2,
+      "name": "Oscar Operador",
+      "email": "operador@demo.com",
+      "password": "1234",
+      "role": "operador"
+    },
+    {
+      "id": 3,
+      "name": "Marta Municipalidad",
+      "email": "municipalidad@demo.com",
+      "password": "1234",
+      "role": "municipalidad"
+    }
+  ],
+  "parkings": [
+    {
+      "id": 1,
+      "name": "Parqueo Central San Carlos",
+      "latitude": 10.3234,
+      "longitude": -84.4271,
+      "capacity": 40,
+      "availableSpots": 14,
+      "ratePerHour": 800,
+      "operatorId": 2,
+      "type": "privado"
+    },
+    {
+      "id": 2,
+      "name": "Zona Azul Municipal",
+      "latitude": 10.322,
+      "longitude": -84.4292,
+      "capacity": 25,
+      "availableSpots": 6,
+      "ratePerHour": 500,
+      "operatorId": 3,
+      "type": "publico"
+    }
+  ],
+  "payments": [
+    {
+      "id": 1,
+      "parkingId": 1,
+      "conductorId": 1,
+      "hours": 2,
+      "amount": 1600,
+      "createdAt": "2026-04-27T15:00:00.000Z"
+    }
+  ]
+}

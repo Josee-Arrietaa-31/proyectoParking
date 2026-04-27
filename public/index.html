@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plataforma de Parqueos</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Sprint 3 · Prototipo funcional</p>
+          <h1>Plataforma Integrada de Gestion de Parqueos</h1>
+          <p class="hero-copy">
+            Un prototipo web para conductores, operadores y municipalidades con disponibilidad visible, registro de parqueos y pagos basicos.
+          </p>
+        </div>
+        <div class="hero-card">
+          <h2>Usuarios demo</h2>
+          <ul>
+            <li>Conductor: `conductor@demo.com` / `1234`</li>
+            <li>Operador: `operador@demo.com` / `1234`</li>
+            <li>Municipalidad: `municipalidad@demo.com` / `1234`</li>
+          </ul>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="panel">
+          <div class="section-header">
+            <h2>Acceso</h2>
+            <p>Inicia sesion o registra un usuario para probar los flujos.</p>
+          </div>
+
+          <div class="auth-grid">
+            <form id="login-form" class="card form-card">
+              <h3>Iniciar sesion</h3>
+              <label>
+                Correo
+                <input type="email" name="email" required />
+              </label>
+              <label>
+                Contrasena
+                <input type="password" name="password" required />
+              </label>
+              <button type="submit">Entrar</button>
+            </form>
+
+            <form id="register-form" class="card form-card">
+              <h3>Registrar usuario</h3>
+              <label>
+                Nombre
+                <input type="text" name="name" required />
+              </label>
+              <label>
+                Correo
+                <input type="email" name="email" required />
+              </label>
+              <label>
+                Contrasena
+                <input type="password" name="password" required />
+              </label>
+              <label>
+                Rol
+                <select name="role" required>
+                  <option value="conductor">Conductor</option>
+                  <option value="operador">Operador</option>
+                  <option value="municipalidad">Municipalidad</option>
+                </select>
+              </label>
+              <button type="submit">Crear cuenta</button>
+            </form>
+          </div>
+
+          <p id="status-message" class="status-message"></p>
+        </section>
+
+        <section class="panel">
+          <div class="section-header">
+            <h2>Vista actual</h2>
+            <p>La interfaz cambia segun el rol autenticado.</p>
+          </div>
+
+          <div id="user-summary" class="user-summary hidden"></div>
+          <div id="role-view"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    font-family: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
