@@ -29,7 +29,7 @@
       "latitude": 10.3234,
       "longitude": -84.4271,
       "capacity": 40,
-      "availableSpots": 14,
+      "availableSpots": 13,
       "ratePerHour": 800,
       "operatorId": 2,
       "type": "privado"
