@@ -5,6 +5,8 @@ import SearchFilters from "../components/SearchFilters";
 import TransactionHistory from "../components/TransactionHistory";
 import ParkingRatings from "../components/ParkingRatings";
 import RatingForm from "../components/RatingForm";
+import ZoneView from "../components/ZoneView";
+import NearbyView from "../components/NearbyView";
 
 function ConductorView({ parkings, payments, ratings, users, currentUser, formatCurrency, onPayParking, onSubmitRating }) {
   const [filteredParkings, setFilteredParkings] = useState(parkings);
@@ -20,23 +22,48 @@ function ConductorView({ parkings, payments, ratings, users, currentUser, format
     return ratings.find(r => r.conductorId === currentUser.id && r.parkingId === parkingId);
   };
 
+  const handleShowRatingModal = (parking) => {
+    setSelectedParking(parking);
+    setShowRatingModal(true);
+  };
+
   return (
     <div className="mt-6 space-y-6">
       {/* Tabs de navegación */}
-      <div className="flex gap-2 border-b border-white/20">
+      <div className="flex gap-2 border-b border-white/20 overflow-x-auto">
         <button
           onClick={() => setActiveTab("search")}
-          className={`px-6 py-3 font-semibold transition ${
+          className={`px-6 py-3 font-semibold transition whitespace-nowrap ${
             activeTab === "search"
               ? "border-b-2 border-emerald-500 text-emerald-600"
               : "text-slate-600 hover:text-slate-900"
           }`}
         >
-          🔍 Buscar parqueos
+          🔍 Mapa
+        </button>
+        <button
+          onClick={() => setActiveTab("zones")}
+          className={`px-6 py-3 font-semibold transition whitespace-nowrap ${
+            activeTab === "zones"
+              ? "border-b-2 border-emerald-500 text-emerald-600"
+              : "text-slate-600 hover:text-slate-900"
+          }`}
+        >
+          📍 Por Zona
+        </button>
+        <button
+          onClick={() => setActiveTab("nearby")}
+          className={`px-6 py-3 font-semibold transition whitespace-nowrap ${
+            activeTab === "nearby"
+              ? "border-b-2 border-emerald-500 text-emerald-600"
+              : "text-slate-600 hover:text-slate-900"
+          }`}
+        >
+          📡 Cercanos
         </button>
         <button
           onClick={() => setActiveTab("history")}
-          className={`px-6 py-3 font-semibold transition ${
+          className={`px-6 py-3 font-semibold transition whitespace-nowrap ${
             activeTab === "history"
               ? "border-b-2 border-emerald-500 text-emerald-600"
               : "text-slate-600 hover:text-slate-900"
@@ -46,61 +73,62 @@ function ConductorView({ parkings, payments, ratings, users, currentUser, format
         </button>
       </div>
 
-      {/* Tab: Buscar parqueos */}
+      {/* Modal de detalles del parqueo - Global para todos los tabs */}
+      {selectedParking && showRatingModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[32px] border border-white/40 bg-white/95 p-8 shadow-2xl backdrop-blur">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-slate-900">{selectedParking.name}</h2>
+              <button
+                onClick={() => setShowRatingModal(false)}
+                className="text-2xl text-slate-400 hover:text-slate-600 transition"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-6">
+              {/* Calificaciones */}
+              <div>
+                <h3 className="font-semibold text-slate-900 mb-4">Calificaciones de usuarios</h3>
+                <ParkingRatings
+                  ratings={ratings.filter(r => r.parkingId === selectedParking.id)}
+                  users={users}
+                />
+              </div>
+
+              {/* Formulario de calificación */}
+              {getUserPaymentForParking(selectedParking.id) && (
+                <div>
+                  <h3 className="font-semibold text-slate-900 mb-4">
+                    {getUserRatingForParking(selectedParking.id) ? "Actualizar tu calificación" : "Califica tu experiencia"}
+                  </h3>
+                  <RatingForm
+                    parkingId={selectedParking.id}
+                    onSubmitRating={(ratingData) => {
+                      onSubmitRating(selectedParking.id, ratingData);
+                      setShowRatingModal(false);
+                    }}
+                    existingRating={getUserRatingForParking(selectedParking.id)}
+                  />
+                </div>
+              )}
+
+              {!getUserPaymentForParking(selectedParking.id) && (
+                <div className="rounded-[24px] border border-blue-200 bg-blue-50 p-5 text-center">
+                  <p className="text-sm text-blue-700">
+                    💡 Necesitas haber pagado en este parqueo para poder calificarlo
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tab: Buscar parqueos (Mapa) */}
       {activeTab === "search" && (
         <div className="space-y-6">
-          {/* Modal de detalles del parqueo */}
-          {selectedParking && showRatingModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-              <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[32px] border border-white/40 bg-white/95 p-8 shadow-2xl backdrop-blur">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-slate-900">{selectedParking.name}</h2>
-                  <button
-                    onClick={() => setShowRatingModal(false)}
-                    className="text-2xl text-slate-400 hover:text-slate-600 transition"
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                <div className="space-y-6">
-                  {/* Calificaciones */}
-                  <div>
-                    <h3 className="font-semibold text-slate-900 mb-4">Calificaciones de usuarios</h3>
-                    <ParkingRatings
-                      ratings={ratings.filter(r => r.parkingId === selectedParking.id)}
-                      users={users}
-                    />
-                  </div>
-
-                  {/* Formulario de calificación */}
-                  {getUserPaymentForParking(selectedParking.id) && (
-                    <div>
-                      <h3 className="font-semibold text-slate-900 mb-4">
-                        {getUserRatingForParking(selectedParking.id) ? "Actualizar tu calificación" : "Califica tu experiencia"}
-                      </h3>
-                      <RatingForm
-                        parkingId={selectedParking.id}
-                        onSubmitRating={(ratingData) => {
-                          onSubmitRating(selectedParking.id, ratingData);
-                          setShowRatingModal(false);
-                        }}
-                        existingRating={getUserRatingForParking(selectedParking.id)}
-                      />
-                    </div>
-                  )}
-
-                  {!getUserPaymentForParking(selectedParking.id) && (
-                    <div className="rounded-[24px] border border-blue-200 bg-blue-50 p-5 text-center">
-                      <p className="text-sm text-blue-700">
-                        💡 Necesitas haber pagado en este parqueo para poder calificarlo
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
 
           <div className="grid gap-6 lg:grid-cols-[1fr_0.8fr]">
             {/* Mapa y filtros */}
@@ -156,8 +184,7 @@ function ConductorView({ parkings, payments, ratings, users, currentUser, format
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setSelectedParking(parking);
-                            setShowRatingModal(true);
+                            handleShowRatingModal(parking);
                           }}
                         >
                           ⭐ Ver calificaciones
@@ -176,6 +203,28 @@ function ConductorView({ parkings, payments, ratings, users, currentUser, format
             )}
           </div>
         </div>
+      )}
+
+      {/* Tab: Por Zona */}
+      {activeTab === "zones" && (
+        <ZoneView
+          parkings={parkings}
+          ratings={ratings}
+          formatCurrency={formatCurrency}
+          onPayParking={onPayParking}
+          onShowRatingModal={handleShowRatingModal}
+        />
+      )}
+
+      {/* Tab: Cercanos */}
+      {activeTab === "nearby" && (
+        <NearbyView
+          parkings={parkings}
+          ratings={ratings}
+          formatCurrency={formatCurrency}
+          onPayParking={onPayParking}
+          onShowRatingModal={handleShowRatingModal}
+        />
       )}
 
       {/* Tab: Historial de transacciones */}

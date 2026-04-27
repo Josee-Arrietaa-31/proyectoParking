@@ -32,7 +32,8 @@
       "availableSpots": 13,
       "ratePerHour": 800,
       "operatorId": 2,
-      "type": "privado"
+      "type": "privado",
+      "zone": "Centro"
     },
     {
       "id": 2,
@@ -43,7 +44,8 @@
       "availableSpots": 5,
       "ratePerHour": 500,
       "operatorId": 3,
-      "type": "publico"
+      "type": "publico",
+      "zone": "Centro"
     }
   ],
   "payments": [
