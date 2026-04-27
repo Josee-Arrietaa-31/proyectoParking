@@ -86,6 +86,7 @@ async function handleApi(req, res, url) {
       users: data.users.map(sanitizeUser),
       parkings: data.parkings,
       payments: data.payments,
+      ratings: data.ratings || [],
       summary: buildMunicipalSummary(data)
     });
     return true;
@@ -221,6 +222,56 @@ async function handleApi(req, res, url) {
     data.payments.push(payment);
     writeData(data);
     sendJson(res, 201, { payment, summary: buildMunicipalSummary(data) });
+    return true;
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/ratings") {
+    const body = await parseBody(req);
+    const { parkingId, conductorId, rating, comment } = body;
+    const data = readData();
+
+    if (!parkingId || !conductorId || !rating || rating < 1 || rating > 5) {
+      sendJson(res, 400, { error: "Datos invalidos para la calificación" });
+      return true;
+    }
+
+    // Verificar si el usuario ya tiene una calificación para este parqueo
+    const existingRating = data.ratings.find(
+      (r) => r.parkingId === Number(parkingId) && r.conductorId === Number(conductorId)
+    );
+
+    if (existingRating) {
+      // Actualizar calificación existente
+      existingRating.rating = Number(rating);
+      existingRating.comment = comment || "";
+      existingRating.createdAt = new Date().toISOString();
+      writeData(data);
+      sendJson(res, 200, { rating: existingRating, message: "Calificación actualizada" });
+      return true;
+    }
+
+    // Crear nueva calificación
+    const newRating = {
+      id: nextId(data.ratings),
+      parkingId: Number(parkingId),
+      conductorId: Number(conductorId),
+      rating: Number(rating),
+      comment: comment || "",
+      createdAt: new Date().toISOString()
+    };
+
+    data.ratings.push(newRating);
+    writeData(data);
+    sendJson(res, 201, { rating: newRating });
+    return true;
+  }
+
+  if (req.method === "GET" && url.pathname.startsWith("/api/parkings/") && url.pathname.endsWith("/ratings")) {
+    const parkingId = Number(url.pathname.split("/")[3]);
+    const data = readData();
+    const parkingRatings = data.ratings.filter((r) => r.parkingId === parkingId);
+
+    sendJson(res, 200, { ratings: parkingRatings });
     return true;
   }
 

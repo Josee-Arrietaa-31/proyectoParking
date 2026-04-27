@@ -16,6 +16,7 @@ function App() {
   const [users, setUsers] = useState([]);
   const [parkings, setParkings] = useState([]);
   const [payments, setPayments] = useState([]);
+  const [ratings, setRatings] = useState([]);
   const [summary, setSummary] = useState({});
   const [loginForm, setLoginForm] = useState(emptyLoginForm);
   const [registerForm, setRegisterForm] = useState(emptyRegisterForm);
@@ -34,6 +35,7 @@ function App() {
       setUsers(payload.users);
       setParkings(payload.parkings);
       setPayments(payload.payments);
+      setRatings(payload.ratings || []);
       setSummary(payload.summary);
     } catch (error) {
       addToast(error.message, "error");
@@ -136,6 +138,24 @@ function App() {
     }
   }
 
+  async function submitRating(parkingId, ratingData) {
+    try {
+      const payload = await api("/api/ratings", {
+        method: "POST",
+        body: JSON.stringify({
+          parkingId,
+          conductorId: currentUser.id,
+          rating: ratingData.rating,
+          comment: ratingData.comment
+        })
+      });
+      setRatings((current) => [...current, payload.rating]);
+      addToast("Calificación enviada correctamente", "success");
+    } catch (error) {
+      addToast(error.message, "error");
+    }
+  }
+
   function logout() {
     setCurrentUser(null);
     addToast("Sesión cerrada", "info");
@@ -180,9 +200,12 @@ function App() {
                   <ConductorView 
                     parkings={parkings} 
                     payments={payments}
+                    ratings={ratings}
+                    users={users}
                     currentUser={currentUser}
                     formatCurrency={formatCurrency} 
-                    onPayParking={payParking} 
+                    onPayParking={payParking}
+                    onSubmitRating={submitRating}
                   />
                 </DashboardShell>
               </ProtectedRoute>
