@@ -1,5 +1,6 @@
-const inputClass =
-  "w-full rounded-2xl border border-white/20 bg-white/70 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-400 focus:bg-white focus:ring-4 focus:ring-emerald-200";
+import { useState } from "react";
+import FormField from "./FormField";
+import { validators, isEmailUnique, validateForm } from "../utils/validators";
 
 function AuthPanel({
   loginForm,
@@ -7,8 +8,76 @@ function AuthPanel({
   onLoginChange,
   onRegisterChange,
   onLoginSubmit,
-  onRegisterSubmit
+  onRegisterSubmit,
+  users = []
 }) {
+  const [loginErrors, setLoginErrors] = useState({});
+  const [registerErrors, setRegisterErrors] = useState({});
+
+  const handleLoginChange = (field, value) => {
+    onLoginChange(field, value);
+    // Limpiar error cuando el usuario empieza a escribir
+    setLoginErrors((prev) => ({ ...prev, [field]: null }));
+  };
+
+  const handleRegisterChange = (field, value) => {
+    onRegisterChange(field, value);
+    // Limpiar error cuando el usuario empieza a escribir
+    setRegisterErrors((prev) => ({ ...prev, [field]: null }));
+  };
+
+  const validateAndSubmitLogin = (event) => {
+    event.preventDefault();
+    
+    const errors = {};
+    if (!loginForm.email) errors.email = "El correo es requerido";
+    else if (!validators.email(loginForm.email)) {
+      // Email es válido
+    } else {
+      errors.email = validators.email(loginForm.email);
+    }
+    
+    if (!loginForm.password) errors.password = "La contraseña es requerida";
+
+    if (Object.keys(errors).length > 0) {
+      setLoginErrors(errors);
+      return;
+    }
+
+    setLoginErrors({});
+    onLoginSubmit(event);
+  };
+
+  const validateAndSubmitRegister = (event) => {
+    event.preventDefault();
+
+    const errors = {};
+
+    // Validar nombre
+    const nameError = validators.name(registerForm.name);
+    if (nameError) errors.name = nameError;
+
+    // Validar email
+    const emailError = validators.email(registerForm.email);
+    if (emailError) {
+      errors.email = emailError;
+    } else if (!isEmailUnique(registerForm.email, users)) {
+      errors.email = "Este correo ya está registrado";
+    }
+
+    // Validar contraseña
+    const passwordError = validators.password(registerForm.password);
+    if (passwordError) errors.password = passwordError;
+
+    if (Object.keys(errors).length > 0) {
+      setRegisterErrors(errors);
+      return;
+    }
+
+    setRegisterErrors({});
+    onRegisterSubmit(event);
+  };
+
   return (
     <section className="rounded-[32px] border border-white/50 bg-white/70 p-6 shadow-[0_30px_100px_rgba(15,23,42,0.08)] backdrop-blur">
       <div>
@@ -18,80 +87,68 @@ function AuthPanel({
       </div>
 
       <div className="mt-6 space-y-5">
-        <form onSubmit={onLoginSubmit} className="rounded-[28px] border border-slate-200/80 bg-slate-50/80 p-5">
+        <form onSubmit={validateAndSubmitLogin} className="rounded-[28px] border border-slate-200/80 bg-slate-50/80 p-5">
           <h3 className="text-lg font-semibold text-slate-900">Iniciar sesion</h3>
           <div className="mt-4 space-y-4">
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-700">Correo</span>
-              <input
-                className={inputClass}
-                type="email"
-                value={loginForm.email}
-                onChange={(event) => onLoginChange("email", event.target.value)}
-                required
-              />
-            </label>
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-700">Contrasena</span>
-              <input
-                className={inputClass}
-                type="password"
-                value={loginForm.password}
-                onChange={(event) => onLoginChange("password", event.target.value)}
-                required
-              />
-            </label>
+            <FormField
+              label="Correo"
+              type="email"
+              value={loginForm.email}
+              onChange={(value) => handleLoginChange("email", value)}
+              error={loginErrors.email}
+              placeholder="conductor@demo.com"
+            />
+            <FormField
+              label="Contraseña"
+              type="password"
+              value={loginForm.password}
+              onChange={(value) => handleLoginChange("password", value)}
+              error={loginErrors.password}
+              placeholder="••••••••"
+            />
           </div>
           <button className="mt-5 inline-flex w-full justify-center rounded-2xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700" type="submit">
             Entrar al sistema
           </button>
         </form>
 
-        <form onSubmit={onRegisterSubmit} className="rounded-[28px] border border-slate-200/80 bg-slate-50/80 p-5">
+        <form onSubmit={validateAndSubmitRegister} className="rounded-[28px] border border-slate-200/80 bg-slate-50/80 p-5">
           <h3 className="text-lg font-semibold text-slate-900">Registrar usuario</h3>
           <div className="mt-4 space-y-4">
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-700">Nombre</span>
-              <input
-                className={inputClass}
-                type="text"
-                value={registerForm.name}
-                onChange={(event) => onRegisterChange("name", event.target.value)}
-                required
-              />
-            </label>
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-700">Correo</span>
-              <input
-                className={inputClass}
-                type="email"
-                value={registerForm.email}
-                onChange={(event) => onRegisterChange("email", event.target.value)}
-                required
-              />
-            </label>
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-700">Contrasena</span>
-              <input
-                className={inputClass}
-                type="password"
-                value={registerForm.password}
-                onChange={(event) => onRegisterChange("password", event.target.value)}
-                required
-              />
-            </label>
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-700">Rol</span>
-              <select
-                className={inputClass}
-                value={registerForm.role}
-                onChange={(event) => onRegisterChange("role", event.target.value)}
-              >
-                <option value="conductor">Conductor</option>
-                <option value="operador">Operador</option>
-                <option value="municipalidad">Municipalidad</option>
-              </select>
-            </label>
+            <FormField
+              label="Nombre"
+              type="text"
+              value={registerForm.name}
+              onChange={(value) => handleRegisterChange("name", value)}
+              error={registerErrors.name}
+              placeholder="Tu nombre completo"
+            />
+            <FormField
+              label="Correo"
+              type="email"
+              value={registerForm.email}
+              onChange={(value) => handleRegisterChange("email", value)}
+              error={registerErrors.email}
+              placeholder="tu@correo.com"
+            />
+            <FormField
+              label="Contraseña"
+              type="password"
+              value={registerForm.password}
+              onChange={(value) => handleRegisterChange("password", value)}
+              error={registerErrors.password}
+              placeholder="Mínimo 4 caracteres"
+            />
+            <FormField
+              label="Rol"
+              value={registerForm.role}
+              onChange={(value) => handleRegisterChange("role", value)}
+              options={[
+                { label: "Conductor", value: "conductor" },
+                { label: "Operador", value: "operador" },
+                { label: "Municipalidad", value: "municipalidad" }
+              ]}
+            />
           </div>
           <button className="mt-5 inline-flex w-full justify-center rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700" type="submit">
             Crear cuenta
