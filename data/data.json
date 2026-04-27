@@ -40,7 +40,7 @@
       "latitude": 10.322,
       "longitude": -84.4292,
       "capacity": 25,
-      "availableSpots": 6,
+      "availableSpots": 5,
       "ratePerHour": 500,
       "operatorId": 3,
       "type": "publico"
@@ -54,6 +54,14 @@
       "hours": 2,
       "amount": 1600,
       "createdAt": "2026-04-27T15:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "parkingId": 2,
+      "conductorId": 1,
+      "hours": 1,
+      "amount": 500,
+      "createdAt": "2026-04-27T17:27:34.543Z"
     }
   ]
 }

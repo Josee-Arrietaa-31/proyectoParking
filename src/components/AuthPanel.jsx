@@ -7,8 +7,7 @@ function AuthPanel({
   onLoginChange,
   onRegisterChange,
   onLoginSubmit,
-  onRegisterSubmit,
-  status
+  onRegisterSubmit
 }) {
   return (
     <section className="rounded-[32px] border border-white/50 bg-white/70 p-6 shadow-[0_30px_100px_rgba(15,23,42,0.08)] backdrop-blur">
@@ -100,8 +99,8 @@ function AuthPanel({
         </form>
       </div>
 
-      <div className={`mt-5 rounded-2xl border px-4 py-3 text-sm ${status.error ? "border-rose-200 bg-rose-50 text-rose-700" : "border-emerald-200 bg-emerald-50 text-emerald-800"}`}>
-        {status.message}
+      <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+        💡 <strong>Demo:</strong> Usa conductor@demo.com / 1234 para probar el flujo
       </div>
     </section>
   );

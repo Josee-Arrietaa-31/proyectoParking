@@ -14,7 +14,6 @@ function HomePage({
   onRegisterChange,
   onLoginSubmit,
   onRegisterSubmit,
-  status,
   currentUser
 }) {
   return (
@@ -29,7 +28,6 @@ function HomePage({
           onRegisterChange={onRegisterChange}
           onLoginSubmit={onLoginSubmit}
           onRegisterSubmit={onRegisterSubmit}
-          status={status}
         />
 
         <section className="rounded-[32px] border border-white/50 bg-white/70 p-6 shadow-[0_30px_100px_rgba(15,23,42,0.08)] backdrop-blur">

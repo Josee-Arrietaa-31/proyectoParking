@@ -4,6 +4,7 @@ import DashboardShell from "./components/DashboardShell";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { emptyLoginForm, emptyParkingForm, emptyRegisterForm } from "./constants/appData";
 import { useSession } from "./hooks/useSession";
+import { useToast } from "./hooks/useToast";
 import HomePage from "./pages/HomePage";
 import { api } from "./services/api";
 import { formatCurrency } from "./utils/format";
@@ -16,11 +17,11 @@ function App() {
   const [parkings, setParkings] = useState([]);
   const [payments, setPayments] = useState([]);
   const [summary, setSummary] = useState({});
-  const [status, setStatus] = useState({ message: "Cargando aplicacion...", error: false });
   const [loginForm, setLoginForm] = useState(emptyLoginForm);
   const [registerForm, setRegisterForm] = useState(emptyRegisterForm);
   const [parkingForm, setParkingForm] = useState(emptyParkingForm);
   const { currentUser, setCurrentUser } = useSession();
+  const { addToast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,9 +35,8 @@ function App() {
       setParkings(payload.parkings);
       setPayments(payload.payments);
       setSummary(payload.summary);
-      setStatus({ message: "Aplicacion lista para pruebas.", error: false });
     } catch (error) {
-      setStatus({ message: error.message, error: true });
+      addToast(error.message, "error");
     }
   }
 
@@ -62,10 +62,10 @@ function App() {
       });
       setCurrentUser(payload.user);
       setLoginForm(emptyLoginForm);
-      setStatus({ message: `Sesion iniciada como ${payload.user.role}.`, error: false });
+      addToast(`Bienvenido, ${payload.user.role}!`, "success");
       navigate(`/${payload.user.role}`);
     } catch (error) {
-      setStatus({ message: error.message, error: true });
+      addToast(error.message, "error");
     }
   }
 
@@ -79,9 +79,9 @@ function App() {
       });
       setUsers((current) => [...current, payload.user]);
       setRegisterForm(emptyRegisterForm);
-      setStatus({ message: `Usuario ${payload.user.name} registrado correctamente.`, error: false });
+      addToast(`Usuario ${payload.user.name} registrado correctamente`, "success");
     } catch (error) {
-      setStatus({ message: error.message, error: true });
+      addToast(error.message, "error");
     }
   }
 
@@ -98,9 +98,9 @@ function App() {
       });
       setParkingForm(emptyParkingForm);
       await loadBootstrap();
-      setStatus({ message: "Parqueo registrado correctamente.", error: false });
+      addToast("Parqueo registrado correctamente", "success");
     } catch (error) {
-      setStatus({ message: error.message, error: true });
+      addToast(error.message, "error");
     }
   }
 
@@ -111,9 +111,9 @@ function App() {
         body: JSON.stringify({ availableSpots })
       });
       await loadBootstrap();
-      setStatus({ message: "Disponibilidad actualizada.", error: false });
+      addToast("Disponibilidad actualizada", "success");
     } catch (error) {
-      setStatus({ message: error.message, error: true });
+      addToast(error.message, "error");
     }
   }
 
@@ -130,15 +130,15 @@ function App() {
       setPayments((current) => [...current, payload.payment]);
       setSummary(payload.summary);
       await loadBootstrap();
-      setStatus({ message: "Pago registrado correctamente.", error: false });
+      addToast("Pago registrado correctamente", "success");
     } catch (error) {
-      setStatus({ message: error.message, error: true });
+      addToast(error.message, "error");
     }
   }
 
   function logout() {
     setCurrentUser(null);
-    setStatus({ message: "Sesion cerrada.", error: false });
+    addToast("Sesión cerrada", "info");
     navigate("/");
   }
 
@@ -163,7 +163,6 @@ function App() {
                 onRegisterChange={updateRegisterField}
                 onLoginSubmit={handleLoginSubmit}
                 onRegisterSubmit={handleRegisterSubmit}
-                status={status}
                 currentUser={currentUser}
               />
             }
