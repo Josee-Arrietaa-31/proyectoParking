@@ -1,7 +1,7 @@
 import RatingStars from "./RatingStars";
 import ParkingAmenities from "./ParkingAmenities";
 
-function ParkingCard({ parking, formatCurrency, action, ratings = [] }) {
+function ParkingCard({ parking, formatCurrency, action, ratings = [], isFavorite = false, onToggleFavorite }) {
   // Calcular promedio de calificación
   const parkingRatings = ratings.filter((r) => r.parkingId === parking.id);
   const averageRating =
@@ -14,11 +14,22 @@ function ParkingCard({ parking, formatCurrency, action, ratings = [] }) {
   return (
     <article className="rounded-[28px] border border-white/40 bg-white/80 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur dark:border-slate-700 dark:bg-slate-800/80 dark:shadow-[0_20px_60px_rgba(0,0,0,0.3)]">
       <div className="flex items-start justify-between gap-4">
-        <div>
-          <span className="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300">
-            {parking.type}
-          </span>
-          <h3 className="mt-3 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">{parking.name}</h3>
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300">
+              {parking.type}
+            </span>
+            {onToggleFavorite && (
+              <button
+                onClick={() => onToggleFavorite(parking.id)}
+                className="ml-auto text-2xl hover:scale-110 transition-transform"
+                title={isFavorite ? "Remover de favoritos" : "Agregar a favoritos"}
+              >
+                {isFavorite ? "❤️" : "🤍"}
+              </button>
+            )}
+          </div>
+          <h3 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">{parking.name}</h3>
           {parkingRatings.length > 0 && (
             <div className="mt-2 flex items-center gap-2">
               <RatingStars rating={Math.round(averageRating)} size="sm" />

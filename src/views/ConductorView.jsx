@@ -7,12 +7,15 @@ import ParkingRatings from "../components/ParkingRatings";
 import RatingForm from "../components/RatingForm";
 import ZoneView from "../components/ZoneView";
 import NearbyView from "../components/NearbyView";
+import FavoritesView from "../components/FavoritesView";
+import useFavorites from "../hooks/useFavorites";
 
 function ConductorView({ parkings, payments, ratings, users, currentUser, formatCurrency, onPayParking, onSubmitRating }) {
   const [filteredParkings, setFilteredParkings] = useState(parkings);
   const [selectedParking, setSelectedParking] = useState(null);
   const [activeTab, setActiveTab] = useState("search");
   const [showRatingModal, setShowRatingModal] = useState(false);
+  const { favorites, toggleFavorite, isFavorite } = useFavorites();
 
   const getUserPaymentForParking = (parkingId) => {
     return payments.find(p => p.conductorId === currentUser.id && p.parkingId === parkingId);
@@ -70,6 +73,16 @@ function ConductorView({ parkings, payments, ratings, users, currentUser, format
           }`}
         >
           📜 Mi historial ({payments.filter(p => p.conductorId === currentUser.id).length})
+        </button>
+        <button
+          onClick={() => setActiveTab("favorites")}
+          className={`px-6 py-3 font-semibold transition whitespace-nowrap ${
+            activeTab === "favorites"
+              ? "border-b-2 border-emerald-500 text-emerald-600"
+              : "text-slate-600 hover:text-slate-900"
+          }`}
+        >
+          ❤️ Favoritos ({favorites.length})
         </button>
       </div>
 
@@ -213,6 +226,8 @@ function ConductorView({ parkings, payments, ratings, users, currentUser, format
           formatCurrency={formatCurrency}
           onPayParking={onPayParking}
           onShowRatingModal={handleShowRatingModal}
+          favorites={favorites}
+          onToggleFavorite={toggleFavorite}
         />
       )}
 
@@ -234,6 +249,19 @@ function ConductorView({ parkings, payments, ratings, users, currentUser, format
           parkings={parkings}
           currentUser={currentUser}
           formatCurrency={formatCurrency}
+        />
+      )}
+
+      {/* Tab: Favoritos */}
+      {activeTab === "favorites" && (
+        <FavoritesView
+          parkings={parkings}
+          ratings={ratings}
+          formatCurrency={formatCurrency}
+          favorites={favorites}
+          onToggleFavorite={toggleFavorite}
+          onPayParking={onPayParking}
+          onShowRatingModal={handleShowRatingModal}
         />
       )}
     </div>

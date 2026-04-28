@@ -2,7 +2,7 @@ import { useState } from "react";
 import ZoneSelector from "./ZoneSelector";
 import ParkingAmenities from "./ParkingAmenities";
 
-function ZoneView({ parkings, ratings, formatCurrency, onPayParking, onShowRatingModal }) {
+function ZoneView({ parkings, ratings, formatCurrency, onPayParking, onShowRatingModal, favorites = [], onToggleFavorite }) {
   const [selectedZone, setSelectedZone] = useState(null);
   const [openMapMenu, setOpenMapMenu] = useState(null); // null o parkingId
 
@@ -88,6 +88,15 @@ function ZoneView({ parkings, ratings, formatCurrency, onPayParking, onShowRatin
                           }`}>
                             {parking.type === "privado" ? "🔒 Privado" : "🔓 Público"}
                           </span>
+                          {onToggleFavorite && (
+                            <button
+                              onClick={() => onToggleFavorite(parking.id)}
+                              className="ml-auto text-lg hover:scale-110 transition-transform"
+                              title={favorites.includes(parking.id) ? "Remover de favoritos" : "Agregar a favoritos"}
+                            >
+                              {favorites.includes(parking.id) ? "❤️" : "🤍"}
+                            </button>
+                          )}
                         </div>
 
                         <p className="text-sm text-slate-600 dark:text-slate-400 mb-3 truncate">📍 {parking.address}</p>
