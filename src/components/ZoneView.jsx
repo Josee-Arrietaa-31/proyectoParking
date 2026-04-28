@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ZoneSelector from "./ZoneSelector";
+import ParkingAmenities from "./ParkingAmenities";
 
 function ZoneView({ parkings, ratings, formatCurrency, onPayParking, onShowRatingModal }) {
   const [selectedZone, setSelectedZone] = useState(null);
@@ -44,10 +45,10 @@ function ZoneView({ parkings, ratings, formatCurrency, onPayParking, onShowRatin
 
   return (
     <div className="space-y-6">
-      <div className="rounded-[30px] border border-white/40 bg-slate-950 p-5 text-white shadow-[0_20px_60px_rgba(15,23,42,0.18)]">
-        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-blue-300">Búsqueda por zona</p>
-        <h3 className="mt-3 text-2xl font-semibold tracking-tight">Explora tu zona</h3>
-        <p className="mt-2 text-sm text-slate-400">Selecciona una zona para ver todos los parqueos disponibles</p>
+      <div className="rounded-[30px] border border-white/40 bg-white/80 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] dark:border-slate-700 dark:bg-slate-800/80 dark:shadow-[0_20px_60px_rgba(0,0,0,0.3)] dark:text-white">
+        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-blue-600 dark:text-blue-400">Búsqueda por zona</p>
+        <h3 className="mt-3 text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">Explora tu zona</h3>
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Selecciona una zona para ver todos los parqueos disponibles</p>
 
         <div className="mt-6">
           <ZoneSelector
@@ -60,7 +61,7 @@ function ZoneView({ parkings, ratings, formatCurrency, onPayParking, onShowRatin
 
       {selectedZone && (
         <div>
-          <h3 className="text-lg font-semibold text-slate-900 mb-4">
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
             Parqueos en {selectedZone} ({selectedParkings.length})
           </h3>
 
@@ -74,34 +75,40 @@ function ZoneView({ parkings, ratings, formatCurrency, onPayParking, onShowRatin
                 const isMapMenuOpen = openMapMenu === parking.id;
 
                 return (
-                  <div key={parking.id} className={`p-4 rounded-xl border ${getAvailabilityColor(parking)} transition hover:shadow-md`}>
+                  <div key={parking.id} className={`p-4 rounded-xl border ${getAvailabilityColor(parking)} transition hover:shadow-md dark:bg-slate-700 dark:border-slate-600`}>
                     <div className="flex justify-between items-start gap-4">
                       {/* Información del parqueo */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-2">
-                          <h4 className="font-semibold text-slate-900 truncate">{parking.name}</h4>
+                          <h4 className="font-semibold text-slate-900 dark:text-slate-100 truncate">{parking.name}</h4>
                           <span className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
                             parking.type === "privado" 
-                              ? "bg-blue-100 text-blue-700" 
-                              : "bg-emerald-100 text-emerald-700"
+                              ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300" 
+                              : "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
                           }`}>
                             {parking.type === "privado" ? "🔒 Privado" : "🔓 Público"}
                           </span>
                         </div>
 
-                        <p className="text-sm text-slate-600 mb-3 truncate">📍 {parking.address}</p>
+                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-3 truncate">📍 {parking.address}</p>
 
                         <div className="flex flex-wrap gap-3 items-center text-sm">
                           <div>
-                            <span className="font-semibold text-slate-900">₡{parking.ratePerHour}/hr</span>
+                            <span className="font-semibold text-slate-900 dark:text-slate-100">₡{parking.ratePerHour}/hr</span>
                           </div>
                           <div className={`font-semibold ${getAvailabilityBadge(parking)}`}>
                             {parking.availableSpots > 0 ? `${parking.availableSpots}/${parking.capacity} disponibles` : "Lleno"}
                           </div>
-                          <div className="text-slate-600">
+                          <div className="text-slate-600 dark:text-slate-400">
                             ⭐ {avgRating} ({parkingRatings.length})
                           </div>
                         </div>
+
+                        {parking.amenities && (
+                          <div className="mt-3">
+                            <ParkingAmenities amenities={parking.amenities} />
+                          </div>
+                        )}
                       </div>
 
                       {/* Botones de acción */}
@@ -116,17 +123,17 @@ function ZoneView({ parkings, ratings, formatCurrency, onPayParking, onShowRatin
                           </button>
 
                           {isMapMenuOpen && (
-                            <div className="absolute top-full right-0 mt-2 bg-white border border-slate-200 rounded-lg shadow-lg z-10 overflow-hidden">
+                            <div className="absolute top-full right-0 mt-2 bg-white border border-slate-200 rounded-lg shadow-lg z-10 overflow-hidden dark:bg-slate-700 dark:border-slate-600">
                               <button
                                 onClick={() => handleOpenGoogleMaps(parking)}
-                                className="w-full px-4 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-blue-50 transition flex items-center gap-2"
+                                className="w-full px-4 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-blue-50 transition flex items-center gap-2 dark:text-slate-200 dark:hover:bg-slate-600"
                               >
                                 <span>🗺️</span>
                                 <span>Google Maps</span>
                               </button>
                               <button
                                 onClick={() => handleOpenWaze(parking)}
-                                className="w-full px-4 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-purple-50 transition flex items-center gap-2 border-t border-slate-200"
+                                className="w-full px-4 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-purple-50 transition flex items-center gap-2 border-t border-slate-200 dark:text-slate-200 dark:hover:bg-slate-600 dark:border-slate-600"
                               >
                                 <span>🧭</span>
                                 <span>Waze</span>

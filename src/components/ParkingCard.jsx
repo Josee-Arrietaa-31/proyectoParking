@@ -1,4 +1,5 @@
 import RatingStars from "./RatingStars";
+import ParkingAmenities from "./ParkingAmenities";
 
 function ParkingCard({ parking, formatCurrency, action, ratings = [] }) {
   // Calcular promedio de calificación
@@ -11,35 +12,40 @@ function ParkingCard({ parking, formatCurrency, action, ratings = [] }) {
       : 0;
 
   return (
-    <article className="rounded-[28px] border border-white/40 bg-white/80 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur">
+    <article className="rounded-[28px] border border-white/40 bg-white/80 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur dark:border-slate-700 dark:bg-slate-800/80 dark:shadow-[0_20px_60px_rgba(0,0,0,0.3)]">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <span className="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-800">
+          <span className="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300">
             {parking.type}
           </span>
-          <h3 className="mt-3 text-xl font-semibold tracking-tight text-slate-900">{parking.name}</h3>
+          <h3 className="mt-3 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">{parking.name}</h3>
           {parkingRatings.length > 0 && (
             <div className="mt-2 flex items-center gap-2">
               <RatingStars rating={Math.round(averageRating)} size="sm" />
-              <span className="text-xs text-slate-600">
+              <span className="text-xs text-slate-600 dark:text-slate-400">
                 {averageRating.toFixed(1)} ({parkingRatings.length})
               </span>
             </div>
           )}
         </div>
-        <div className="rounded-2xl bg-slate-950 px-3 py-2 text-right text-white">
-          <p className="text-[11px] uppercase tracking-[0.2em] text-slate-300">Tarifa</p>
-          <p className="text-sm font-semibold">{formatCurrency(parking.ratePerHour)}</p>
+        <div className="rounded-2xl bg-slate-950 px-3 py-2 text-right text-white dark:bg-slate-700">
+          <p className="text-[11px] uppercase tracking-[0.2em] text-slate-300 dark:text-slate-400">Tarifa</p>
+          <p className="text-sm font-semibold dark:text-slate-100">{formatCurrency(parking.ratePerHour)}</p>
         </div>
       </div>
-      <div className="mt-5 grid gap-3 text-sm text-slate-600 sm:grid-cols-2">
+      <div className="mt-5 grid gap-3 text-sm text-slate-600 sm:grid-cols-2 dark:text-slate-400">
         <p>
-          Disponibles: <span className="font-semibold text-slate-900">{parking.availableSpots}</span> de {parking.capacity}
+          Disponibles: <span className="font-semibold text-slate-900 dark:text-slate-100">{parking.availableSpots}</span> de {parking.capacity}
         </p>
         <p>
-          Ubicacion: <span className="font-semibold text-slate-900">{parking.latitude}, {parking.longitude}</span>
+          Ubicacion: <span className="font-semibold text-slate-900 dark:text-slate-100">{parking.latitude}, {parking.longitude}</span>
         </p>
       </div>
+      {parking.amenities && (
+        <div className="mt-4">
+          <ParkingAmenities amenities={parking.amenities} />
+        </div>
+      )}
       {action ? <div className="mt-5">{action}</div> : null}
     </article>
   );

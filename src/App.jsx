@@ -5,6 +5,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { emptyLoginForm, emptyParkingForm, emptyRegisterForm } from "./constants/appData";
 import { useSession } from "./hooks/useSession";
 import { useToast } from "./hooks/useToast";
+import useTheme from "./hooks/useTheme";
 import HomePage from "./pages/HomePage";
 import { api } from "./services/api";
 import { formatCurrency } from "./utils/format";
@@ -23,6 +24,7 @@ function App() {
   const [parkingForm, setParkingForm] = useState(emptyParkingForm);
   const { currentUser, setCurrentUser } = useSession();
   const { addToast } = useToast();
+  const { isDarkMode, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -165,7 +167,7 @@ function App() {
   const myParkings = currentUser ? parkings.filter((parking) => parking.operatorId === currentUser.id) : [];
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.18),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(251,191,36,0.18),_transparent_24%),linear-gradient(180deg,_#f8fafc_0%,_#ecfdf5_48%,_#eff6ff_100%)] text-slate-900">
+    <div className={`min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.18),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(251,191,36,0.18),_transparent_24%),linear-gradient(180deg,_#f8fafc_0%,_#ecfdf5_48%,_#eff6ff_100%)] text-slate-900 dark:bg-slate-950 dark:text-slate-100`}>
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         <Routes>
           <Route
@@ -196,6 +198,8 @@ function App() {
                   onLogout={logout}
                   title="Panel del conductor"
                   description="Consulta parqueos cercanos, revisa disponibilidad y registra pagos desde una vista dedicada."
+                  isDarkMode={isDarkMode}
+                  toggleTheme={toggleTheme}
                 >
                   <ConductorView 
                     parkings={parkings} 
@@ -220,6 +224,8 @@ function App() {
                   onLogout={logout}
                   title="Panel del operador"
                   description="Administra parqueos, tarifas y disponibilidad desde una pantalla enfocada en la operacion."
+                  isDarkMode={isDarkMode}
+                  toggleTheme={toggleTheme}
                 >
                   <OperadorView
                     parkingForm={parkingForm}
@@ -242,6 +248,8 @@ function App() {
                   onLogout={logout}
                   title="Panel municipal"
                   description="Observa ocupacion, capacidad e ingresos desde una vista mas clara para supervision."
+                  isDarkMode={isDarkMode}
+                  toggleTheme={toggleTheme}
                 >
                   <MunicipalidadView summary={summary} parkings={parkings} formatCurrency={formatCurrency} />
                 </DashboardShell>
