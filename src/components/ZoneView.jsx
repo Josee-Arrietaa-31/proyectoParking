@@ -3,6 +3,7 @@ import ZoneSelector from "./ZoneSelector";
 
 function ZoneView({ parkings, ratings, formatCurrency, onPayParking, onShowRatingModal }) {
   const [selectedZone, setSelectedZone] = useState(null);
+  const [openMapMenu, setOpenMapMenu] = useState(null); // null o parkingId
 
   const zonesWithParkings = {};
   parkings.forEach((parking) => {
@@ -15,9 +16,16 @@ function ZoneView({ parkings, ratings, formatCurrency, onPayParking, onShowRatin
 
   const selectedParkings = selectedZone ? (zonesWithParkings[selectedZone] || []) : [];
 
-  const handleOpenMaps = (parking) => {
+  const handleOpenGoogleMaps = (parking) => {
     const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(parking.address)}/@${parking.latitude},${parking.longitude},17z`;
     window.open(mapsUrl, "_blank");
+    setOpenMapMenu(null);
+  };
+
+  const handleOpenWaze = (parking) => {
+    const wazeUrl = `https://waze.com/ul?ll=${parking.latitude},${parking.longitude}&navigate=yes`;
+    window.open(wazeUrl, "_blank");
+    setOpenMapMenu(null);
   };
 
   const getAvailabilityColor = (parking) => {
@@ -63,6 +71,7 @@ function ZoneView({ parkings, ratings, formatCurrency, onPayParking, onShowRatin
                 const avgRating = parkingRatings.length > 0 
                   ? (parkingRatings.reduce((sum, r) => sum + r.rating, 0) / parkingRatings.length).toFixed(1)
                   : "—";
+                const isMapMenuOpen = openMapMenu === parking.id;
 
                 return (
                   <div key={parking.id} className={`p-4 rounded-xl border ${getAvailabilityColor(parking)} transition hover:shadow-md`}>
@@ -96,14 +105,36 @@ function ZoneView({ parkings, ratings, formatCurrency, onPayParking, onShowRatin
                       </div>
 
                       {/* Botones de acción */}
-                      <div className="flex flex-col gap-2 whitespace-nowrap">
-                        <button
-                          onClick={() => handleOpenMaps(parking)}
-                          className="px-3 py-2 rounded-lg bg-blue-500 text-white text-sm font-semibold hover:bg-blue-600 transition"
-                          title="Abrir ubicación en Google Maps"
-                        >
-                          🗺️ Ir
-                        </button>
+                      <div className="flex flex-col gap-2 whitespace-nowrap relative">
+                        <div className="relative">
+                          <button
+                            onClick={() => setOpenMapMenu(isMapMenuOpen ? null : parking.id)}
+                            className="px-3 py-2 rounded-lg bg-blue-500 text-white text-sm font-semibold hover:bg-blue-600 transition"
+                            title="Abrir opciones de navegación"
+                          >
+                            🗺️ Ir
+                          </button>
+
+                          {isMapMenuOpen && (
+                            <div className="absolute top-full right-0 mt-2 bg-white border border-slate-200 rounded-lg shadow-lg z-10 overflow-hidden">
+                              <button
+                                onClick={() => handleOpenGoogleMaps(parking)}
+                                className="w-full px-4 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-blue-50 transition flex items-center gap-2"
+                              >
+                                <span>🗺️</span>
+                                <span>Google Maps</span>
+                              </button>
+                              <button
+                                onClick={() => handleOpenWaze(parking)}
+                                className="w-full px-4 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-purple-50 transition flex items-center gap-2 border-t border-slate-200"
+                              >
+                                <span>🧭</span>
+                                <span>Waze</span>
+                              </button>
+                            </div>
+                          )}
+                        </div>
+
                         <button
                           onClick={() => onShowRatingModal(parking)}
                           className="px-3 py-2 rounded-lg bg-blue-100 text-blue-700 text-sm font-semibold hover:bg-blue-200 transition"
