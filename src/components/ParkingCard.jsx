@@ -1,7 +1,7 @@
 import RatingStars from "./RatingStars";
 import ParkingAmenities from "./ParkingAmenities";
 
-function ParkingCard({ parking, formatCurrency, action, ratings = [], isFavorite = false, onToggleFavorite }) {
+function ParkingCard({ parking, formatCurrency, action, ratings = [], isFavorite = false, onToggleFavorite, onClick }) {
   // Calcular promedio de calificación
   const parkingRatings = ratings.filter((r) => r.parkingId === parking.id);
   const averageRating =
@@ -12,7 +12,10 @@ function ParkingCard({ parking, formatCurrency, action, ratings = [], isFavorite
       : 0;
 
   return (
-    <article className="rounded-[28px] border border-white/40 bg-white/80 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur dark:border-slate-700 dark:bg-slate-800/80 dark:shadow-[0_20px_60px_rgba(0,0,0,0.3)]">
+    <article 
+      onClick={onClick}
+      className="rounded-[28px] border border-white/40 bg-white/80 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur dark:border-slate-700 dark:bg-slate-800/80 dark:shadow-[0_20px_60px_rgba(0,0,0,0.3)] transition-all hover:shadow-[0_25px_70px_rgba(15,23,42,0.15)] hover:scale-105 cursor-pointer"
+    >
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">

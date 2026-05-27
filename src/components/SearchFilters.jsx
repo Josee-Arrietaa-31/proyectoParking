@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 function SearchFilters({ parkings, onFiltersChange }) {
   const [filters, setFilters] = useState({
@@ -16,6 +16,24 @@ function SearchFilters({ parkings, onFiltersChange }) {
 
   // Extraer zonas únicas
   const zones = ["todas", ...new Set(parkings.map(p => p.zone).filter(Boolean))];
+
+  // Memorizar onFiltersChange para evitar dependencias circulares
+  const memoizedOnFiltersChange = useCallback(onFiltersChange, [onFiltersChange]);
+
+  // Aplicar filtros cuando parkings o filtros cambian
+  useEffect(() => {
+    const filtered = parkings.filter((parking) => {
+      if (filters.availableOnly && parking.availableSpots === 0) return false;
+      if (parking.ratePerHour < filters.minPrice || parking.ratePerHour > filters.maxPrice) return false;
+      if (filters.type !== "todos" && parking.type !== filters.type) return false;
+      if (filters.zone !== "todas" && parking.zone !== filters.zone) return false;
+      if (parking.capacity < filters.minCapacity) return false;
+      const occupancy = parking.capacity > 0 ? ((parking.capacity - parking.availableSpots) / parking.capacity) * 100 : 0;
+      if (occupancy > filters.maxOccupancy) return false;
+      return true;
+    });
+    memoizedOnFiltersChange(filtered);
+  }, [parkings, filters, memoizedOnFiltersChange]);
 
   // Extraer calificaciones de parqueos (simulado con ratings)
   const getParkingRating = (parkingId) => {

@@ -18,6 +18,12 @@ function App() {
   const [parkings, setParkings] = useState([]);
   const [payments, setPayments] = useState([]);
   const [ratings, setRatings] = useState([]);
+  const [reservations, setReservations] = useState([]);
+  const [vehicles, setVehicles] = useState([]);
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [userSubscriptions, setUserSubscriptions] = useState([]);
+  const [supportTickets, setSupportTickets] = useState([]);
+  const [infractions, setInfractions] = useState([]);
   const [summary, setSummary] = useState({});
   const [loginForm, setLoginForm] = useState(emptyLoginForm);
   const [registerForm, setRegisterForm] = useState(emptyRegisterForm);
@@ -38,6 +44,12 @@ function App() {
       setParkings(payload.parkings);
       setPayments(payload.payments);
       setRatings(payload.ratings || []);
+      setReservations(payload.reservations || []);
+      setVehicles(payload.vehicles || []);
+      setSubscriptions(payload.subscriptions || []);
+      setUserSubscriptions(payload.user_subscriptions || []);
+      setSupportTickets(payload.support_tickets || []);
+      setInfractions(payload.infractions || []);
       setSummary(payload.summary);
     } catch (error) {
       addToast(error.message, "error");
@@ -210,6 +222,11 @@ function App() {
                     formatCurrency={formatCurrency} 
                     onPayParking={payParking}
                     onSubmitRating={submitRating}
+                    vehicles={vehicles}
+                    subscriptions={subscriptions}
+                    userSubscriptions={userSubscriptions}
+                    supportTickets={supportTickets}
+                    infractions={infractions}
                   />
                 </DashboardShell>
               </ProtectedRoute>
